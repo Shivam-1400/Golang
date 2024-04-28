@@ -6,14 +6,12 @@ import (
 )
 
 func main() {
-	// Connect to Redis
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Redis server address
-		Password: "",               // no password set
-		DB:       0,                // use default DB
+		Addr: "localhost:6379",
+		Password: "",
+		DB:0,
 	})
 
-	// Check connection
 	pong, err := redisClient.Ping().Result()
 	if err != nil {
 		fmt.Println("Error connecting to Redis:", err)
@@ -21,7 +19,6 @@ func main() {
 	}
 	fmt.Println("Connected to Redis:", pong)
 
-	// Push data into Redis list using RPUSH
 	key := "goList"
 	err = redisClient.RPush(key, "item1", "item2", "item3").Err()
 	if err != nil {
@@ -30,7 +27,6 @@ func main() {
 	}
 	fmt.Println("Data pushed into Redis list")
 
-	// Put some data into the Redis hash map
 	hashKey := "myhash"
 	err = redisClient.HSet(hashKey, hashKey, map[string]interface{}{
 		"field1": "value1",
@@ -42,8 +38,6 @@ func main() {
 	}
 	fmt.Println("Data put into Redis hash map successfully")
 
-
-	// Read data from Redis hash map and print as output
 	hashData, err := redisClient.HGetAll(hashKey).Result()
 	if err != nil {
 		fmt.Println("Error reading hash map data from Redis:", err)
@@ -54,7 +48,6 @@ func main() {
 		fmt.Printf("%s: %s\n", field, value)
 	}
 
-	// Pop data from Redis list using LPOP
 	poppedItem, err := redisClient.LPop(key).Result()
 	if err != nil {
 		fmt.Println("Error popping data from list:", err)
